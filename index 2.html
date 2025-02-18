@@ -64,18 +64,20 @@
         </div>
         <div class="col-span-2 row-span-2 flex items-center justify-center">
             <div class="border border-gray-300 w-72 h-full rounded-lg overflow-hidden shadow-lg">
-                <img class="w-full h-full object-cover" src="https://via.placeholder.com/360x285" alt="Image du Vtuber(euse)">
+                 <img class="w-full h-full object-cover" src="https://via.placeholder.com/360x285" alt="Image du Vtuber(euse)">
             </div>
         </div>
     </div>
 
     <script>
         const colors = []; // Tableau pour stocker les couleurs
-        let selectedColor = '#000000'; // Couleur sélectionnée par l'utilisateur
+        let selectedColor = '#ffffff'; // Couleur sélectionnée par l'utilisateur
 
-        document.getElementById('colorPicker').addEventListener('input', function()
         document.getElementById('colorPicker').addEventListener('input', function() {
             selectedColor = this.value; // Met à jour la couleur sélectionnée
+            if (!colors.includes(selectedColor)) {
+                colors.push(selectedColor); // Ajoute la couleur au tableau si elle n'est pas déjà présente
+            }
         });
 
         function generateStars() {
@@ -153,3 +155,4 @@
     </script>
 </body>
 </html>
+
