@@ -4,19 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <title>Vtuber(euse) Information et Ciel Étoilé</title>
+    <title>Vtuber(euse) Information</title>
     <style>
         body {
-            background: black; /* Fond noir par défaut */
+            background: linear-gradient(to right, black, black); /* Fond noir par défaut */
             color: white; /* Couleur de texte par défaut */
-            overflow: auto; /* Permet le défilement */
-            position: relative; /* Pour positionner les étoiles */
             transition: background 0.5s ease; /* Transition pour le changement de couleur */
-        }
-        .star {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.8;
         }
     </style>
 </head>
@@ -24,23 +17,9 @@
     
     <h1 class="text-5xl font-bold text-center mb-12">Le nom du Vtuber(euse)</h1>
     
-    <!-- Sélecteur de couleur pour les étoiles -->
-    <label for="colorPicker" class="mb-4 text-lg block text-center">Choisissez une couleur pour les étoiles :</label>
-    <input type="color" id="colorPicker" value="#ffffff" class="mb-8 block mx-auto">
-
-    <!-- Bouton pour générer les étoiles -->
-    <button id="generateStarsButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 mb-4" onclick="generateStars()">
-        Générer des étoiles
-    </button>
-
-    <!-- Sélecteur de couleur pour le fond -->
-    <label for="backgroundColorPicker" class="mb-4 text-lg block text-center">Choisissez une couleur de fond :</label>
-    <input type="color" id="backgroundColorPicker" value="#000000" class="mb-8 block mx-auto" onchange="changeBackgroundColor()">
-
-    <!-- Bouton pour appliquer la couleur de fond -->
-    <button id="applyBackgroundColorButton" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300 mb-4" onclick="applyBackgroundColor()">
-        Appliquer la couleur de fond
-    </button>
+    <!-- Sélecteur de couleur -->
+    <label for="colorPicker" class="mb-4 text-lg">Choisissez une couleur :</label>
+    <input type="color" id="colorPicker" value="#000000" class="mb-8">
 
     <!-- Bouton de mélange de couleurs -->
     <button id="mixButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300" onclick="mixColors()">
@@ -80,77 +59,27 @@
             }
         });
 
-        function generateStars() {
-            const numberOfStars = 100; // Nombre d'étoiles à générer
-            const color = document.getElementById('colorPicker').value; // Couleur sélectionnée pour les étoiles
-
-            // Supprime les étoiles existantes
-            const existingStars = document.querySelectorAll('.star');
-            existingStars.forEach(star => star.remove());
-
-            for (let i = 0; i < numberOfStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = `${Math.random() * 3 + 2}px`; // Taille aléatoire
-                star.style.height = star.style.width; // Rendre l'étoile ronde
-                star.style.backgroundColor = color; // Applique la couleur sélectionnée
-                star.style.top = `${Math.random() * 100}vh`; // Position verticale aléatoire
-                star.style.left = `${Math.random() * 100}vw`; // Position horizontale aléatoire
-                document.body.appendChild(star);
-            }
-        }
-
-        function changeBackgroundColor() {
-            const backgroundColor = document.getElementById('backgroundColorPicker').value; // Couleur de fond sélectionnée
-            document.body.style.backgroundColor = backgroundColor; // Change la couleur de fond
-        }
-
-        function applyBackgroundColor() {
-            const backgroundColor = document.getElementById('backgroundColorPicker').value; // Couleur de fond sélectionnée
-            document.body.style.backgroundColor = backgroundColor; // Change la couleur de fond
-        }
-
         function mixColors() {
-            if (colors.length < 2) {
-                alert("Vous devez ajouter au moins 2 couleurs pour les mélanger.");
-                return;
+            if (colors.length < 3 && !colors.includes(selectedColor)) {
+                colors.push(selectedColor); // Ajoute la couleur sélectionnée si elle n'est pas déjà présente
             }
-
-            // Mélange les couleurs en calculant la moyenne des valeurs RGB
-            const mixedColor = colors.reduce((acc, color) => {
-                const rgb = hexToRgb(color);
-                acc.r += rgb.r;
-                acc.g += rgb.g;
-                acc.b += rgb.b;
-                return acc;
-            }, { r: 0, g: 0, b: 0 });
-
-            mixedColor.r = Math.floor(mixedColor.r / colors.length);
-            mixedColor.g = Math.floor(mixedColor.g / colors.length);
-            mixedColor.b = Math.floor(mixedColor.b / colors.length);
-
-            const mixedColorHex = rgbToHex(mixedColor.r, mixedColor.g, mixedColor.b);
-            document.body.style.background = mixedColorHex; // Change le fond avec la couleur mélangée
-            alert(`Couleur mélangée : ${mixedColorHex}`);
+            if (colors.length > 0) {
+                updateBackground(); // Met à jour le fond avec les couleurs
+            }
         }
 
         function resetColors() {
-            colors.length = 0; // Réinitialise le tableau de couleurs
-            document.body.style.background = 'black'; // Réinitialise le fond
-            alert("Les couleurs ont été réinitialisées.");
+            colors.length = 0; // Vider le tableau des couleurs
+            document.body.style.background = 'black'; // Réinitialiser le fond à noir
         }
 
-        function hexToRgb(hex) {
-            const bigint = parseInt(hex.slice(1), 16);
-            return {
-                r: (bigint >> 16) & 255,
-                g: (bigint >> 8) & 255,
-                b: bigint & 255
-            };
-        }
-
-        function rgbToHex(r, g, b) {
-            return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+               function updateBackground() {
+            if (colors.length > 0) {
+                // Appliquer un dégradé avec les couleurs
+                document.body.style.background = `linear-gradient(to right, ${colors.join(', ')})`;
+            } else {
+                document.body.style.background = 'black'; // Fond noir par défaut
+            }
         }
     </script>
 </body>
