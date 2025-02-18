@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Vtuber(euse) Information et Ciel Étoilé</title>
+    <style>
+        body {
+            background: black; /* Fond noir par défaut */
+            color: white; /* Couleur de texte par défaut */
+            overflow: auto; /* Permet le défilement */
+            position: relative; /* Pour positionner les étoiles */
+            transition: background 0.5s ease; /* Transition pour le changement de couleur */
+        }
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="p-6 flex flex-col items-center min-h-screen">
+    
+    <h1 class="text-5xl font-bold text-center mb-12">Le nom du Vtuber(euse)</h1>
+    
+    <!-- Sélecteur de couleur pour les étoiles -->
+    <label for="colorPicker" class="mb-4 text-lg block text-center">Choisissez une couleur pour les étoiles :</label>
+    <input type="color" id="colorPicker" value="#ffffff" class="mb-8 block mx-auto">
+
+    <!-- Bouton pour générer les étoiles -->
+    <button id="generateStarsButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 mb-4" onclick="generateStars()">
+        Générer des étoiles
+    </button>
+
+    <!-- Sélecteur de couleur pour le fond -->
+    <label for="backgroundColorPicker" class="mb-4 text-lg block text-center">Choisissez une couleur de fond :</label>
+    <input type="color" id="backgroundColorPicker" value="#000000" class="mb-8 block mx-auto" onchange="changeBackgroundColor()">
+
+    <!-- Bouton pour appliquer la couleur de fond -->
+    <button id="applyBackgroundColorButton" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300 mb-4" onclick="applyBackgroundColor()">
+        Appliquer la couleur de fond
+    </button>
+
+    <!-- Bouton de mélange de couleurs -->
+    <button id="mixButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300" onclick="mixColors()">
+        Mélanger les couleurs
+    </button>
+
+    <!-- Bouton pour réinitialiser les couleurs -->
+    <button id="resetButton" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300 mt-4" onclick="resetColors()">
+        Réinitialiser les couleurs
+    </button>
+
+    <div class="grid grid-flow-col grid-rows-3 gap-4 mt-8">
+        <div class="row-span-3 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center p-6 text-black">
+            <h2 class="text-2xl font-semibold text-center">Informations</h2>
+            <p class="text-gray-800 mt-2 text-base text-center max-w-xs">Créateur(trice) de modèle, caractéristiques et média. Ce paragraphe peut contenir des informations détaillées sur le Vtuber(euse).</p>
+        </div>
+        <div class="col-span-2 flex items-center justify-center">
+            <div class="border border-gray-300 w-72 h-72 rounded-lg overflow-hidden shadow-lg">
+                <img class="w-full h-full object-cover" src="https://via.placeholder.com/360" alt="Planète habitante du monde du Vtuber(euse)">
+            </div>
+        </div>
+        <div class="col-span-2 row-span-2 flex items-center justify-center">
+            <div class="border border-gray-300 w-72 h-full rounded-lg overflow-hidden shadow-lg">
+                <img class="w-full h-full object-cover" src="https://via.placeholder.com/360x285" alt="Image du Vtuber(euse)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colors = []; // Tableau pour stocker les couleurs
+        let selectedColor = '#000000'; // Couleur sélectionnée par l'utilisateur
+
+        document.getElementById('colorPicker').addEventListener('input', function()
+        document.getElementById('colorPicker').addEventListener('input', function() {
+            selectedColor = this.value; // Met à jour la couleur sélectionnée
+        });
+
+        function generateStars() {
+            const numberOfStars = 100; // Nombre d'étoiles à générer
+            const color = document.getElementById('colorPicker').value; // Couleur sélectionnée pour les étoiles
+
+            // Supprime les étoiles existantes
+            const existingStars = document.querySelectorAll('.star');
+            existingStars.forEach(star => star.remove());
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 3 + 2}px`; // Taille aléatoire
+                star.style.height = star.style.width; // Rendre l'étoile ronde
+                star.style.backgroundColor = color; // Applique la couleur sélectionnée
+                star.style.top = `${Math.random() * 100}vh`; // Position verticale aléatoire
+                star.style.left = `${Math.random() * 100}vw`; // Position horizontale aléatoire
+                document.body.appendChild(star);
+            }
+        }
+
+        function changeBackgroundColor() {
+            const backgroundColor = document.getElementById('backgroundColorPicker').value; // Couleur de fond sélectionnée
+            document.body.style.backgroundColor = backgroundColor; // Change la couleur de fond
+        }
+
+        function applyBackgroundColor() {
+            const backgroundColor = document.getElementById('backgroundColorPicker').value; // Couleur de fond sélectionnée
+            document.body.style.backgroundColor = backgroundColor; // Change la couleur de fond
+        }
+
+        function mixColors() {
+            if (colors.length < 2) {
+                alert("Vous devez ajouter au moins 2 couleurs pour les mélanger.");
+                return;
+            }
+
+            // Mélange les couleurs en calculant la moyenne des valeurs RGB
+            const mixedColor = colors.reduce((acc, color) => {
+                const rgb = hexToRgb(color);
+                acc.r += rgb.r;
+                acc.g += rgb.g;
+                acc.b += rgb.b;
+                return acc;
+            }, { r: 0, g: 0, b: 0 });
+
+            mixedColor.r = Math.floor(mixedColor.r / colors.length);
+            mixedColor.g = Math.floor(mixedColor.g / colors.length);
+            mixedColor.b = Math.floor(mixedColor.b / colors.length);
+
+            const mixedColorHex = rgbToHex(mixedColor.r, mixedColor.g, mixedColor.b);
+            document.body.style.background = mixedColorHex; // Change le fond avec la couleur mélangée
+            alert(`Couleur mélangée : ${mixedColorHex}`);
+        }
+
+        function resetColors() {
+            colors.length = 0; // Réinitialise le tableau de couleurs
+            document.body.style.background = 'black'; // Réinitialise le fond
+            alert("Les couleurs ont été réinitialisées.");
+        }
+
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            return {
+                r: (bigint >> 16) & 255,
+                g: (bigint >> 8) & 255,
+                b: bigint & 255
+            };
+        }
+
+        function rgbToHex(r, g, b) {
+            return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+        }
+    </script>
+</body>
+</html>
